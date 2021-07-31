@@ -1,0 +1,287 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"type": "string",
+			"metadata": "Data Factory name",
+			"defaultValue": "adfkvncont"
+		},
+		"AzureBlobStorage_stsharedresources15200_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'AzureBlobStorage_stsharedresources15200'"
+		},
+		"CosmosDb_kvncont_kiwi_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'CosmosDb_kvncont_kiwi'"
+		}
+	},
+	"variables": {
+		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+	},
+	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/AzureBlobStorage_stsharedresources15200')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureBlobStorage",
+				"typeProperties": {
+					"connectionString": "[parameters('AzureBlobStorage_stsharedresources15200_connectionString')]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/CosmosDb_kvncont_kiwi')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "CosmosDb",
+				"typeProperties": {
+					"connectionString": "[parameters('CosmosDb_kvncont_kiwi_connectionString')]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/OUTPUT')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureBlobStorage_stsharedresources15200",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"container": "data"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"quoteChar": "\""
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureBlobStorage_stsharedresources15200')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/TEMPLATES')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureBlobStorage_stsharedresources15200",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "Json",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"container": "data"
+					}
+				},
+				"schema": {}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureBlobStorage_stsharedresources15200')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/WWADETPLT')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureBlobStorage_stsharedresources15200",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": "WWADETPLT_DEV.csv",
+						"container": "data"
+					},
+					"columnDelimiter": ";",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "CODIGO_COMPANIA",
+						"type": "String"
+					},
+					{
+						"name": "PLAN_PPP",
+						"type": "String"
+					},
+					{
+						"name": "NUMERO_PLANTILLA",
+						"type": "String"
+					},
+					{
+						"name": "NUMERO_LINEA",
+						"type": "String"
+					},
+					{
+						"name": "REFERENCIA_DE_PLAN",
+						"type": "String"
+					},
+					{
+						"name": "INFORMACION_ADICONAL",
+						"type": "String"
+					},
+					{
+						"name": "FECHA_INSERCION",
+						"type": "String"
+					},
+					{
+						"name": "USUARIO_INSERCION",
+						"type": "String"
+					},
+					{
+						"name": "FECHA_MODIFICACION",
+						"type": "String"
+					},
+					{
+						"name": "USUARIO_MODIFICACION",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureBlobStorage_stsharedresources15200')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/WWAPLTPPP')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureBlobStorage_stsharedresources15200",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": "WWAPLTPPP_DEV.csv",
+						"container": "data"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "CODIGO_COMPANIA",
+						"type": "String"
+					},
+					{
+						"name": "PLAN_PPP",
+						"type": "String"
+					},
+					{
+						"name": "NUMERO_PLANTILLA",
+						"type": "String"
+					},
+					{
+						"name": "NOMBRE_PLANTILLA",
+						"type": "String"
+					},
+					{
+						"name": "FECHA_INSERCION",
+						"type": "String"
+					},
+					{
+						"name": "USUARIO_INSERCION",
+						"type": "String"
+					},
+					{
+						"name": "FECHA_MODIFICACION",
+						"type": "String"
+					},
+					{
+						"name": "USUARIO_MODIFICACION",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureBlobStorage_stsharedresources15200')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/CSVtoJSON')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "WWAPLTPPP",
+								"type": "DatasetReference"
+							},
+							"name": "WWAPLTPPPSOURCE"
+						},
+						{
+							"dataset": {
+								"referenceName": "WWADETPLT",
+								"type": "DatasetReference"
+							},
+							"name": "WWADETPLTSource"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "OUTPUT",
+								"type": "DatasetReference"
+							},
+							"name": "sink1"
+						}
+					],
+					"transformations": [
+						{
+							"name": "Join1"
+						},
+						{
+							"name": "Select1"
+						},
+						{
+							"name": "DerivedColumnPK"
+						},
+						{
+							"name": "Select2"
+						},
+						{
+							"name": "Sort1"
+						}
+					],
+					"script": "source(output(\n\t\tCODIGO_COMPANIA as string,\n\t\tPLAN_PPP as string,\n\t\tNUMERO_PLANTILLA as integer,\n\t\tNOMBRE_PLANTILLA as string,\n\t\tFECHA_INSERCION as string,\n\t\tUSUARIO_INSERCION as string,\n\t\tFECHA_MODIFICACION as string,\n\t\tUSUARIO_MODIFICACION as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false) ~> WWAPLTPPPSOURCE\nsource(output(\n\t\tCODIGO_COMPANIA as string,\n\t\tPLAN_PPP as string,\n\t\tNUMERO_PLANTILLA as integer,\n\t\tNUMERO_LINEA as integer,\n\t\tREFERENCIA_DE_PLAN as string,\n\t\tINFORMACION_ADICONAL as string,\n\t\tFECHA_INSERCION as string,\n\t\tUSUARIO_INSERCION as string,\n\t\tFECHA_MODIFICACION as string,\n\t\tUSUARIO_MODIFICACION as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false) ~> WWADETPLTSource\nWWAPLTPPPSOURCE, WWADETPLTSource join(WWAPLTPPPSOURCE@CODIGO_COMPANIA == WWADETPLTSource@CODIGO_COMPANIA\n\t&& WWAPLTPPPSOURCE@PLAN_PPP == WWADETPLTSource@PLAN_PPP,\n\tjoinType:'inner',\n\tbroadcast: 'auto')~> Join1\nJoin1 select(mapColumn(\n\t\tCODIGO_COMPANIA = WWAPLTPPPSOURCE@CODIGO_COMPANIA,\n\t\tPLAN_PPP = WWAPLTPPPSOURCE@PLAN_PPP,\n\t\tNUMERO_PLANTILLA = WWAPLTPPPSOURCE@NUMERO_PLANTILLA,\n\t\tNOMBRE_PLANTILLA,\n\t\tFECHA_INSERCION = WWAPLTPPPSOURCE@FECHA_INSERCION,\n\t\tUSUARIO_INSERCION = WWAPLTPPPSOURCE@USUARIO_INSERCION,\n\t\tFECHA_MODIFICACION = WWAPLTPPPSOURCE@FECHA_MODIFICACION,\n\t\tUSUARIO_MODIFICACION = WWAPLTPPPSOURCE@USUARIO_MODIFICACION,\n\t\tCODIGO_COMPANIA = WWADETPLTSource@CODIGO_COMPANIA,\n\t\tPLAN_PPP = WWADETPLTSource@PLAN_PPP,\n\t\tNUMERO_PLANTILLA = WWADETPLTSource@NUMERO_PLANTILLA,\n\t\tNUMERO_LINEA,\n\t\tREFERENCIA_DE_PLAN,\n\t\tINFORMACION_ADICONAL,\n\t\tFECHA_INSERCION = WWADETPLTSource@FECHA_INSERCION,\n\t\tUSUARIO_INSERCION = WWADETPLTSource@USUARIO_INSERCION,\n\t\tFECHA_MODIFICACION = WWADETPLTSource@FECHA_MODIFICACION,\n\t\tUSUARIO_MODIFICACION = WWADETPLTSource@USUARIO_MODIFICACION\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> Select1\nSelect1 derive(PK = add(CODIGO_COMPANIA, PLAN_PPP)) ~> DerivedColumnPK\nDerivedColumnPK select(mapColumn(\n\t\tPK,\n\t\tCODIGO_COMPANIA,\n\t\tPLAN_PPP,\n\t\tNUMERO_PLANTILLA,\n\t\tNOMBRE_PLANTILLA,\n\t\tNUMERO_LINEA,\n\t\tREFERENCIA_DE_PLAN,\n\t\tINFORMACION_ADICONAL,\n\t\tFECHA_INSERCION,\n\t\tUSUARIO_INSERCION,\n\t\tFECHA_MODIFICACION,\n\t\tUSUARIO_MODIFICACION\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> Select2\nSelect2 sort(asc(PK, true),\n\tasc(NUMERO_PLANTILLA, true),\n\tasc(NUMERO_LINEA, true)) ~> Sort1\nSort1 sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> sink1"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/WWAPLTPPP')]",
+				"[concat(variables('factoryId'), '/datasets/WWADETPLT')]",
+				"[concat(variables('factoryId'), '/datasets/OUTPUT')]"
+			]
+		}
+	]
+}
