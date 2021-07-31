@@ -1,0 +1,51 @@
+{
+	"name": "CSVtoJSON",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "WWAPLTPPP",
+						"type": "DatasetReference"
+					},
+					"name": "WWAPLTPPPSOURCE"
+				},
+				{
+					"dataset": {
+						"referenceName": "WWADETPLT",
+						"type": "DatasetReference"
+					},
+					"name": "WWADETPLTSource"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "OUTPUT",
+						"type": "DatasetReference"
+					},
+					"name": "sink1"
+				}
+			],
+			"transformations": [
+				{
+					"name": "Join1"
+				},
+				{
+					"name": "Select1"
+				},
+				{
+					"name": "DerivedColumnPK"
+				},
+				{
+					"name": "Select2"
+				},
+				{
+					"name": "Sort1"
+				}
+			],
+			"script": "source(output(\n\t\tCODIGO_COMPANIA as string,\n\t\tPLAN_PPP as string,\n\t\tNUMERO_PLANTILLA as integer,\n\t\tNOMBRE_PLANTILLA as string,\n\t\tFECHA_INSERCION as string,\n\t\tUSUARIO_INSERCION as string,\n\t\tFECHA_MODIFICACION as string,\n\t\tUSUARIO_MODIFICACION as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false) ~> WWAPLTPPPSOURCE\nsource(output(\n\t\tCODIGO_COMPANIA as string,\n\t\tPLAN_PPP as string,\n\t\tNUMERO_PLANTILLA as integer,\n\t\tNUMERO_LINEA as integer,\n\t\tREFERENCIA_DE_PLAN as string,\n\t\tINFORMACION_ADICONAL as string,\n\t\tFECHA_INSERCION as string,\n\t\tUSUARIO_INSERCION as string,\n\t\tFECHA_MODIFICACION as string,\n\t\tUSUARIO_MODIFICACION as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false) ~> WWADETPLTSource\nWWAPLTPPPSOURCE, WWADETPLTSource join(WWAPLTPPPSOURCE@CODIGO_COMPANIA == WWADETPLTSource@CODIGO_COMPANIA\n\t&& WWAPLTPPPSOURCE@PLAN_PPP == WWADETPLTSource@PLAN_PPP,\n\tjoinType:'inner',\n\tbroadcast: 'auto')~> Join1\nJoin1 select(mapColumn(\n\t\tCODIGO_COMPANIA = WWAPLTPPPSOURCE@CODIGO_COMPANIA,\n\t\tPLAN_PPP = WWAPLTPPPSOURCE@PLAN_PPP,\n\t\tNUMERO_PLANTILLA = WWAPLTPPPSOURCE@NUMERO_PLANTILLA,\n\t\tNOMBRE_PLANTILLA,\n\t\tFECHA_INSERCION = WWAPLTPPPSOURCE@FECHA_INSERCION,\n\t\tUSUARIO_INSERCION = WWAPLTPPPSOURCE@USUARIO_INSERCION,\n\t\tFECHA_MODIFICACION = WWAPLTPPPSOURCE@FECHA_MODIFICACION,\n\t\tUSUARIO_MODIFICACION = WWAPLTPPPSOURCE@USUARIO_MODIFICACION,\n\t\tCODIGO_COMPANIA = WWADETPLTSource@CODIGO_COMPANIA,\n\t\tPLAN_PPP = WWADETPLTSource@PLAN_PPP,\n\t\tNUMERO_PLANTILLA = WWADETPLTSource@NUMERO_PLANTILLA,\n\t\tNUMERO_LINEA,\n\t\tREFERENCIA_DE_PLAN,\n\t\tINFORMACION_ADICONAL,\n\t\tFECHA_INSERCION = WWADETPLTSource@FECHA_INSERCION,\n\t\tUSUARIO_INSERCION = WWADETPLTSource@USUARIO_INSERCION,\n\t\tFECHA_MODIFICACION = WWADETPLTSource@FECHA_MODIFICACION,\n\t\tUSUARIO_MODIFICACION = WWADETPLTSource@USUARIO_MODIFICACION\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> Select1\nSelect1 derive(PK = add(CODIGO_COMPANIA, PLAN_PPP)) ~> DerivedColumnPK\nDerivedColumnPK select(mapColumn(\n\t\tPK,\n\t\tCODIGO_COMPANIA,\n\t\tPLAN_PPP,\n\t\tNUMERO_PLANTILLA,\n\t\tNOMBRE_PLANTILLA,\n\t\tNUMERO_LINEA,\n\t\tREFERENCIA_DE_PLAN,\n\t\tINFORMACION_ADICONAL,\n\t\tFECHA_INSERCION,\n\t\tUSUARIO_INSERCION,\n\t\tFECHA_MODIFICACION,\n\t\tUSUARIO_MODIFICACION\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> Select2\nSelect2 sort(asc(PK, true),\n\tasc(NUMERO_PLANTILLA, true),\n\tasc(NUMERO_LINEA, true)) ~> Sort1\nSort1 sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> sink1"
+		}
+	}
+}

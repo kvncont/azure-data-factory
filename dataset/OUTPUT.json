@@ -1,0 +1,22 @@
+{
+	"name": "OUTPUT",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureBlobStorage_stsharedresources15200",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"container": "data"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"quoteChar": "\""
+		},
+		"schema": []
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

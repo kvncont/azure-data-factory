@@ -1,0 +1,65 @@
+{
+	"name": "WWADETPLT",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureBlobStorage_stsharedresources15200",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": "WWADETPLT_DEV.csv",
+				"container": "data"
+			},
+			"columnDelimiter": ";",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": [
+			{
+				"name": "CODIGO_COMPANIA",
+				"type": "String"
+			},
+			{
+				"name": "PLAN_PPP",
+				"type": "String"
+			},
+			{
+				"name": "NUMERO_PLANTILLA",
+				"type": "String"
+			},
+			{
+				"name": "NUMERO_LINEA",
+				"type": "String"
+			},
+			{
+				"name": "REFERENCIA_DE_PLAN",
+				"type": "String"
+			},
+			{
+				"name": "INFORMACION_ADICONAL",
+				"type": "String"
+			},
+			{
+				"name": "FECHA_INSERCION",
+				"type": "String"
+			},
+			{
+				"name": "USUARIO_INSERCION",
+				"type": "String"
+			},
+			{
+				"name": "FECHA_MODIFICACION",
+				"type": "String"
+			},
+			{
+				"name": "USUARIO_MODIFICACION",
+				"type": "String"
+			}
+		]
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}
